@@ -179,7 +179,7 @@
         const name = document.getElementById("name").value.trim();
         const dob = document.getElementById("dob").value.trim();
 
-        db.collection("dobEntries").add({
+        db.collection("dob_pin").add({
           name: name,
           dob: dob,
           timestamp: firebase.firestore.FieldValue.serverTimestamp()
